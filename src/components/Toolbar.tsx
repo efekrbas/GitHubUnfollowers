@@ -52,7 +52,7 @@ export const Toolbar = ({
             }
             switch (state.status) {
               case "initial":
-                if (confirm("Go back to Instagram?")) {
+                if (confirm("Go back to GitHub?")) {
                   location.reload();
                 }
                 break;
@@ -67,7 +67,7 @@ export const Toolbar = ({
         >
           <Logo />
           <div className="logo-text">
-            <span>Instagram</span>
+            <span>GitHub</span>
             <span>Unfollowers</span>
           </div>
         </div>
