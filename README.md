@@ -1,23 +1,23 @@
-# 📱 Instagram Unfollowers
+# 📱 GitHub Unfollowers
 
 [![Maintenance](https://img.shields.io/maintenance/yes/2025)](https://github.com/davidarroyo1234/InstagramUnfollowers)
 
-A nifty tool that lets you see who doesn't follow you back on Instagram.  
+A nifty tool that lets you see who doesn't follow you back on GitHub.  
 <u>Browser-based and requires no downloads or installations!</u>
 
 ## ⚠️ WARNING
 
-This version utilizes the Instagram API for better performance.  
+This version works on github.com and reads your followers/following pages in your logged-in session.  
 
 ## 🖥️ Desktop Usage
 
-1. Copy the code from: [InstagramUnfollowers Tool](https://davidarroyo1234.github.io/InstagramUnfollowers/)
+1. Copy the code from your built page (or GitHub Pages deployment of this project)
 
 2. Press the COPY button to copy the code.
 
     <img src="./assets/copy_code.png" alt="Copy code button" />
 
-3. Go to Instagram website and log in to your account
+3. Go to GitHub website and log in to your account
 
 4. Open the developer console:
    - Windows: `Ctrl + Shift + J`
@@ -55,7 +55,7 @@ This version utilizes the Instagram API for better performance.
 For Android users who want to use it on mobile:
 
 1. Download the latest version of [Eruda Android Browser](https://github.com/liriliri/eruda-android/releases/)
-2. Open Instagram web through the Eruda browser
+2. Open GitHub through the Eruda browser
 3. Follow the same steps as desktop (the console will be automatically available when clicking the eruda icon)
 
 ## ⚡ Performance Notes
@@ -83,7 +83,7 @@ For Android users who want to use it on mobile:
 
 ## ⚖️ Legal & License
 
-**Disclaimer:** This tool is not affiliated, associated, authorized, endorsed by, or officially connected with Instagram.
+**Disclaimer:** This tool is not affiliated, associated, authorized, endorsed by, or officially connected with GitHub.
 
 ⚠️ Use at your own risk!
 

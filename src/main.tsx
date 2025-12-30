@@ -2,20 +2,20 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { render } from "react-dom";
 import "./styles.scss";
 
-import { User, UserNode } from "./model/user";
+import { UserNode } from "./model/user";
 import { Toast } from "./components/Toast";
 import { UserCheckIcon } from "./components/icons/UserCheckIcon";
 import { UserUncheckIcon } from "./components/icons/UserUncheckIcon";
 import { DEFAULT_TIME_BETWEEN_SEARCH_CYCLES,
   DEFAULT_TIME_BETWEEN_UNFOLLOWS,
   DEFAULT_TIME_TO_WAIT_AFTER_FIVE_SEARCH_CYCLES,
-  DEFAULT_TIME_TO_WAIT_AFTER_FIVE_UNFOLLOWS, INSTAGRAM_HOSTNAME } from "./constants/constants";
+  DEFAULT_TIME_TO_WAIT_AFTER_FIVE_UNFOLLOWS, GITHUB_HOSTNAME } from "./constants/constants";
 import {
   assertUnreachable,
-  getCookie,
   getCurrentPageUnfollowers,
-  getUsersForDisplay, sleep, unfollowUserUrlGenerator, urlGenerator,
+  getUsersForDisplay, sleep,
 } from "./utils/utils";
+import { scanGithubUsers, unfollowGithubUser } from "./utils/github";
 import { NotSearching } from "./components/NotSearching";
 import { State } from "./model/state";
 import { Searching } from "./components/Searching";
@@ -235,61 +235,22 @@ function App() {
       if (state.status !== "scanning") {
         return;
       }
-      const results = [...state.results];
-      let scrollCycle = 0;
-      let url = urlGenerator();
-      let hasNext = true;
-      let currentFollowedUsersCount = 0;
-      let totalFollowedUsersCount = -1;
-
-      while (hasNext) {
-        let receivedData: User;
+      // Only GitHub is supported
+      if (location.hostname === GITHUB_HOSTNAME) {
         try {
-          receivedData = (await fetch(url).then(res => res.json())).data.user.edge_follow;
+          const users = await scanGithubUsers();
+          setState(prev => {
+            if (prev.status !== "scanning") return prev;
+            return { ...prev, results: users, percentage: 100 };
+          });
+          setToast({ show: true, text: "Scanning completed!" });
         } catch (e) {
           console.error(e);
-          continue;
+          alert("GitHub scan failed: " + (e as Error).message);
         }
-
-        if (totalFollowedUsersCount === -1) {
-          totalFollowedUsersCount = receivedData.count;
-        }
-
-        hasNext = receivedData.page_info.has_next_page;
-        url = urlGenerator(receivedData.page_info.end_cursor);
-        currentFollowedUsersCount += receivedData.edges.length;
-        receivedData.edges.forEach(x => results.push(x.node));
-
-        setState(prevState => {
-          if (prevState.status !== "scanning") {
-            return prevState;
-          }
-          const newState: State = {
-            ...prevState,
-            // Fix: Changed from Math.floor to Math.round to ensure progress reaches 100%
-            // Math.floor would leave progress at 99% when near completion
-            percentage: Math.round((currentFollowedUsersCount / totalFollowedUsersCount) * 100),
-            results,
-          };
-          return newState;
-        });
-
-        // Pause scanning if user requested so.
-        while (scanningPaused) {
-          await sleep(1000);
-          console.info("Scan paused");
-        }
-
-        await sleep(Math.floor(Math.random() * (timings.timeBetweenSearchCycles - timings.timeBetweenSearchCycles * 0.7)) + timings.timeBetweenSearchCycles);
-        scrollCycle++;
-        if (scrollCycle > 6) {
-          scrollCycle = 0;
-          setToast({ show: true, text: `Sleeping ${timings.timeToWaitAfterFiveSearchCycles / 1000 } seconds to prevent getting temp blocked` });
-          await sleep(timings.timeToWaitAfterFiveSearchCycles);
-        }
-        setToast({ show: false });
+        return;
       }
-      setToast({ show: true, text: "Scanning completed!" });
+      alert("This tool only works on GitHub.");
     };
     scan();
     // Dependency array not entirely legit, but works this way. TODO: Find a way to fix.
@@ -301,74 +262,40 @@ function App() {
       if (state.status !== "unfollowing") {
         return;
       }
-
-      const csrftoken = getCookie("csrftoken");
-      if (csrftoken === null) {
-        throw new Error("csrftoken cookie is null");
-      }
-
-      let counter = 0;
-      for (const user of state.selectedResults) {
-        counter += 1;
-        // Fix: Changed from Math.floor to Math.round to ensure progress reaches 100%
-        // Math.floor would leave progress at 99% when near completion
-        const percentage = Math.round((counter / state.selectedResults.length) * 100);
-        try {
-          await fetch(unfollowUserUrlGenerator(user.id), {
-            headers: {
-              "content-type": "application/x-www-form-urlencoded",
-              "x-csrftoken": csrftoken,
-            },
-            method: "POST",
-            mode: "cors",
-            credentials: "include",
-          });
-          setState(prevState => {
-            if (prevState.status !== "unfollowing") {
-              return prevState;
-            }
-            return {
-              ...prevState,
-              percentage,
-              unfollowLog: [
-                ...prevState.unfollowLog,
-                {
-                  user,
-                  unfollowedSuccessfully: true,
-                },
-              ],
-            };
-          });
-        } catch (e) {
-          console.error(e);
-          setState(prevState => {
-            if (prevState.status !== "unfollowing") {
-              return prevState;
-            }
-            return {
-              ...prevState,
-              percentage,
-              unfollowLog: [
-                ...prevState.unfollowLog,
-                {
-                  user,
-                  unfollowedSuccessfully: false,
-                },
-              ],
-            };
-          });
+      if (location.hostname === GITHUB_HOSTNAME) {
+        let counter = 0;
+        for (const user of state.selectedResults) {
+          counter += 1;
+          const percentage = Math.round((counter / state.selectedResults.length) * 100);
+          try {
+            await unfollowGithubUser(user.username);
+            setState(prev => {
+              if (prev.status !== "unfollowing") return prev;
+              return {
+                ...prev,
+                percentage,
+                unfollowLog: [
+                  ...prev.unfollowLog,
+                  { user, unfollowedSuccessfully: true },
+                ],
+              };
+            });
+          } catch (e) {
+            console.error(e);
+            setState(prev => {
+              if (prev.status !== "unfollowing") return prev;
+              return {
+                ...prev,
+                percentage,
+                unfollowLog: [
+                  ...prev.unfollowLog,
+                  { user, unfollowedSuccessfully: false },
+                ],
+              };
+            });
+          }
         }
-        // If unfollowing the last user in the list, no reason to wait.
-        if (user === state.selectedResults[state.selectedResults.length - 1]) {
-          break;
-        }
-        await sleep(Math.floor(Math.random() * (timings.timeBetweenUnfollows * 1.2 - timings.timeBetweenUnfollows)) + timings.timeBetweenUnfollows);
-
-        if (counter % 5 === 0) {
-          setToast({ show: true, text: `Sleeping ${timings.timeToWaitAfterFiveUnfollows / 60000 } minutes to prevent getting temp blocked` });
-          await sleep(timings.timeToWaitAfterFiveUnfollows);
-        }
-        setToast({ show: false });
+        return;
       }
     };
     unfollow();
@@ -430,10 +357,10 @@ function App() {
   );
 }
 
-if (location.hostname !== INSTAGRAM_HOSTNAME) {
-  alert("Can be used only on Instagram routes");
-} else {
-  document.title = "InstagramUnfollowers";
+if (location.hostname === GITHUB_HOSTNAME) {
+  document.title = "GitHub Unfollowers";
   document.body.innerHTML = "";
   render(<App />, document.body);
+} else {
+  alert("Can be used only on GitHub routes");
 }

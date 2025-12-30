@@ -15,8 +15,8 @@ function generateTemplate(bundleRelPath) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Instagram Unfollowers</title>
-  <meta name="description" content="See who doesn't follow you back on Instagram" />
+  <title>GitHub Unfollowers</title>
+  <meta name="description" content="See who doesn't follow you back on GitHub" />
   <style>
     body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin:0; padding:24px; background:#0b0b0c; color:#f3f3f4}
     .container{max-width:900px;margin:0 auto}
@@ -32,7 +32,7 @@ function generateTemplate(bundleRelPath) {
 </head>
 <body>
   <div class="container">
-    <h1>Instagram Unfollowers</h1>
+    <h1>GitHub Unfollowers</h1>
     <p>Build generated at ${new Date().toISOString()}</p>
     <div class="actions">
       <button id="copyBtn">COPY SCRIPT</button>
