@@ -13,7 +13,7 @@ import { DEFAULT_TIME_BETWEEN_SEARCH_CYCLES,
 import {
   assertUnreachable,
   getCurrentPageUnfollowers,
-  getUsersForDisplay, sleep,
+  getUsersForDisplay,
 } from "./utils/utils";
 import { scanGithubUsers, unfollowGithubUser } from "./utils/github";
 import { NotSearching } from "./components/NotSearching";

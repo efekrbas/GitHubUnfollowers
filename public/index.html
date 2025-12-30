@@ -6,53 +6,27 @@
   <title>GitHub Unfollowers</title>
   <meta name="description" content="See who doesn't follow you back on GitHub" />
   <style>
-    :root{
-      --bg:#0b0b0c;--fg:#f3f3f4;--muted:#b5b5b8;--card:#111214;--chip:#161617;--accent:#00e4ff;--btn:#2a2a2e;--btn-fg:#e7e7ea;--btn-hover:#34343a
-    }
-    *{box-sizing:border-box}
-    body{font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"; margin:0; background:var(--bg); color:var(--fg)}
-    .container{max-width:860px;margin:0 auto;padding:56px 24px;display:flex;flex-direction:column;align-items:center}
-    .brand{display:flex;align-items:center;gap:16px;margin-bottom:28px}
-    .logo{
-      position:relative;width:42px;height:42px
-    }
-    .logo .dot{position:absolute;width:16px;height:16px;border-radius:50%;background:#2a2a2e;top:8px;left:6px}
-    .logo .dot2{top:18px;left:20px}
-    .logo .dash{position:absolute;width:18px;height:4px;background:var(--accent);top:6px;left:26px;border-radius:3px}
-    h1{font-size:28px;font-weight:700;margin:0;letter-spacing:.2px}
-    .subtitle{color:var(--muted);margin-top:6px}
-    .code-wrap{width:100%;background:var(--chip);border-radius:14px;padding:8px 12px;display:flex;align-items:center;gap:8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
-    .code{flex:1;max-height:84px;overflow:auto;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:12px;line-height:1.4;color:#d1d1d4;white-space:pre}
-    .actions{margin:28px 0 12px 0;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-    .btn{display:flex;align-items:center;gap:10px;background:var(--btn);color:var(--btn-fg);border:none;border-radius:16px;padding:16px 28px;cursor:pointer;font-weight:600;font-size:16px;box-shadow:0 2px 0 rgba(0,0,0,.3)}
-    .btn:hover{background:var(--btn-hover)}
-    .btn svg{width:20px;height:20px}
-    .hint{color:var(--muted);font-size:12px;margin-top:6px;text-align:center}
+    body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin:0; padding:24px; background:#0b0b0c; color:#f3f3f4}
+    .container{max-width:900px;margin:0 auto}
+    h1{font-size:28px;margin:0 0 12px}
+    p{color:#b5b5b8}
+    .actions{margin:20px 0;display:flex;gap:12px;flex-wrap:wrap}
+    button{background:#1f6feb;border:none;color:white;padding:10px 16px;border-radius:8px;cursor:pointer}
+    button.secondary{background:#2d2d30}
+    code, pre{background:#161617;color:#d1d1d4;border-radius:8px}
+    pre{padding:12px;overflow:auto}
+    footer{margin-top:40px;color:#8a8a8f;font-size:12px}
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="brand">
-      <div class="logo">
-        <div class="dot"></div>
-        <div class="dot dot2"></div>
-        <div class="dash"></div>
-      </div>
-      <div>
-        <h1>GitHub Unfollowers</h1>
-        <div class="subtitle">Paste this on github.com to run the tool</div>
-      </div>
-    </div>
-    <div class="code-wrap">
-      <div id="code" class="code"></div>
-    </div>
+    <h1>GitHub Unfollowers</h1>
+    <p>Build generated at 2025-12-30T23:41:12.021Z</p>
     <div class="actions">
-      <button id="copyBtn" class="btn" title="Copy code">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1z"/><path d="M20 5H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h12v14z"/></svg>
-        Copy code
-      </button>
+      <button id="copyBtn">COPY SCRIPT</button>
+      <button class="secondary" id="downloadBtn">DOWNLOAD dist.js</button>
     </div>
-    <div class="hint">Build time: <span id="buildTime"></span></div>
+    <pre id="preview" hidden></pre>
   </div>
   <script>
     const bundlePath = "../dist/dist.js";
@@ -61,16 +35,6 @@
       if (!res.ok) throw new Error('Failed to load bundle: ' + res.status);
       return await res.text();
     }
-    (async () => {
-      try {
-        const text = await getBundle();
-        const display = text.slice(0, 5000);
-        document.getElementById('code').textContent = display;
-      } catch (e) {
-        document.getElementById('code').textContent = 'Failed to load bundle';
-      }
-      document.getElementById('buildTime').textContent = new Date().toLocaleString();
-    })();
     document.getElementById('copyBtn').addEventListener('click', async () => {
       try {
         const text = await getBundle();
