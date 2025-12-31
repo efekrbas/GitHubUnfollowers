@@ -60,7 +60,7 @@ function generateTemplate(bundleRelPath) {
         Copy code
       </button>
     </div>
-    <div class="hint">Build time: <span id="buildTime"></span></div>
+    
   </div>
   <script>
     const bundlePath = ${JSON.stringify(bundleRelPath)};
@@ -77,7 +77,7 @@ function generateTemplate(bundleRelPath) {
       } catch (e) {
         document.getElementById('code').textContent = 'Failed to load bundle';
       }
-      document.getElementById('buildTime').textContent = new Date().toLocaleString();
+      
     })();
     document.getElementById('copyBtn').addEventListener('click', async () => {
       try {
