@@ -11,7 +11,10 @@
     body{font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; margin:0; background:var(--bg); color:var(--fg)}
     .container{max-width:860px;margin:0 auto;padding:56px 24px;display:flex;flex-direction:column;align-items:center}
     .brand{display:flex;align-items:center;gap:16px;margin-bottom:20px}
-.logo{position:relative;width:42px;height:42px}.logo:before{content:"";position:absolute;inset:0;border-radius:50%;background:#111}.logo .head{position:absolute;width:11.86px;height:11.86px;left:15.08px;top:7.68px;border-radius:50%;background:#222}.logo .body{position:absolute;width:18.04px;height:15.68px;left:12.01px;top:20.94px;border-radius:50%;background:#222}.logo .dash{position:absolute;width:7.83px;height:2.37px;left:28.86px;top:13.29px;border-radius:1.19px;background:var(--accent,#0ff)}
+    .logo{position:relative;width:42px;height:42px}
+    .logo .dot{position:absolute;width:16px;height:16px;border-radius:50%;background:#2a2a2e;top:8px;left:6px}
+    .logo .dot2{top:18px;left:20px}
+    .logo .dash{position:absolute;width:18px;height:4px;background:var(--accent);top:6px;left:26px;border-radius:3px}
     h1{font-size:28px;font-weight:700;margin:0;letter-spacing:.2px}
     .subtitle{color:var(--muted);margin-top:6px}
     .code-wrap{width:100%;background:var(--chip);border-radius:14px;padding:8px 12px;display:flex;align-items:center;gap:8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
@@ -26,12 +29,11 @@
 <body>
   <div class="container">
     <div class="brand">
-    <div class="logo" aria-label="logo">
-  <span class="head"></span>
-  <span class="body"></span>
-  <span class="dash"></span>
-</div>
-
+      <div class="logo">
+        <div class="dot"></div>
+        <div class="dot dot2"></div>
+        <div class="dash"></div>
+      </div>
       <div>
         <h1>GitHub Unfollowers</h1>
         <div class="subtitle">Paste this on github.com to run the tool</div>
@@ -49,7 +51,7 @@
     
   </div>
   <script>
-    const bundlePath = "../dist/dist.js";
+    const bundlePath = "dist/dist.js";
     async function getBundle() {
       const res = await fetch(bundlePath + '?t=' + Date.now());
       if (!res.ok) throw new Error('Failed to load bundle: ' + res.status);
