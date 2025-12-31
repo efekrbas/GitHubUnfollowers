@@ -48,7 +48,6 @@
         Copy code
       </button>
     </div>
-    <div class="hint">Build time: <span id="buildTime"></span></div>
   </div>
   <script>
     const bundlePath = "../dist/dist.js";
@@ -65,7 +64,7 @@
       } catch (e) {
         document.getElementById('code').textContent = 'Failed to load bundle';
       }
-      document.getElementById('buildTime').textContent = new Date().toLocaleString();
+      
     })();
     document.getElementById('copyBtn').addEventListener('click', async () => {
       try {
