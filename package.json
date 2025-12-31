@@ -4,7 +4,7 @@
     "build-dev": "npm run build && webpack serve --mode development",
     "build-prod": "npm run webpack-build && webpack serve --mode production",
     "update-readme": "node scripts/update-index.js public/index.html dist/dist.js",
-    "build": "npm run webpack-build && npm run update-readme",
+    "build": "npm run webpack-build",
     "export:pages": "node scripts/export-pages.js",
     "build:pages": "npm run build && npm run export:pages"
   },
