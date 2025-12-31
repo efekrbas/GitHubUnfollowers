@@ -4,4 +4,5 @@ dist/
 .idea/
 .DS_Store
 bun.lockb
-docs/dist/dist.js
+!docs/dist/
+!docs/dist/**
