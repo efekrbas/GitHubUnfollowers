@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-  <meta name="google-site-verification" content="1xWTL9GsVehj53Mtymtb0oI0csOm-fOOo1C4YwpJl0o" />
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GitHub Unfollowers</title>
@@ -49,7 +48,8 @@
     .logo {
       position: relative;
       width: 42px;
-      height: 42px
+      height: 42px;
+      flex-shrink: 0
     }
 
     .logo:before {
@@ -162,6 +162,21 @@
       margin-top: 6px;
       text-align: center
     }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 32px 16px;
+      }
+
+      .brand {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+    }
   </style>
 </head>
 
@@ -173,11 +188,9 @@
         <span class="body"></span>
         <span class="dash"></span>
       </div>
-
-
-
       <div>
         <h1>GitHub Unfollowers</h1>
+        <div class="subtitle">To run the tool, while on the github.com page, paste this code into the developer console.
         </div>
       </div>
     </div>
@@ -192,12 +205,7 @@
         </svg>
         Copy code
       </button>
-	  </div>
-	  <center>
-	   <div class="subtitle">To run the tool, while on the github.com page, paste this code into the developer console.
-	   </center>
- </div>
-
+    </div>
   </div>
   <script>
     const bundlePath = "dist/dist.js";
