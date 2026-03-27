@@ -11,7 +11,7 @@ This version works on github.com and reads your followers/following pages in you
 
 ## 🖥️ Desktop Usage
 
-1. Copy the code from: [GithubUnfollowers Tool](https://efekrbas.github.io/GithubUnfollowers/)
+1. Copy the code from: [GitHubUnfollowers Tool](https://efekrbas.github.io/GitHubUnfollowers/)
 
 2. Press the COPY button to copy the code.
 
